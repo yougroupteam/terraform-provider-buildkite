@@ -1,6 +1,8 @@
 Terraform Provider
 ==================
 
+[![Build Status](https://travis-ci.org/COzero/terraform-provider-bitbucket.svg?branch=master)](https://travis-ci.org/COzero/terraform-provider-bitbucket)
+
 - Website: https://www.terraform.io
 - [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
