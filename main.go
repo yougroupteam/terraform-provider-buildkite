@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/cozero/terraform-provider-buildkite/buildkite"
+	"github.com/buildkite/go-buildkite/buildkite"
 	"github.com/hashicorp/terraform/plugin"
 )
 
