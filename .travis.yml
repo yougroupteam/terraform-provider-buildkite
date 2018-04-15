@@ -9,3 +9,8 @@ matrix:
   fast_finish: true
   allow_failures:
   - go: tip
+
+# using dep for dependency management
+install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure
