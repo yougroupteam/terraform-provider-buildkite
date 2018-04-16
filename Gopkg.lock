@@ -78,6 +78,19 @@
   version = "v3.5.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/buildkite/go-buildkite"
+  packages = ["buildkite"]
+  revision = "fa21e2f688f77d473d81583b65c12ae98fee2d3c"
+  source = "https://github.com/cozero/go-buildkite.git"
+
+[[projects]]
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -106,6 +119,12 @@
   ]
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
   version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   branch = "master"
@@ -225,6 +244,8 @@
     "helper/logging",
     "helper/resource",
     "helper/schema",
+    "helper/structure",
+    "helper/validation",
     "httpclient",
     "moduledeps",
     "plugin",
@@ -455,6 +476,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ff0ad41b7c34ca296632d2c86399cce4de5f24aa822aae7b50bb4021cffc9ca1"
+  inputs-digest = "10168bf391550092fbc10f59183725b3ba6024f8b1ecd68cf1a52f1aa5934b7d"
   solver-name = "gps-cdcl"
   solver-version = 1

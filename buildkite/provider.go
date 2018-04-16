@@ -11,6 +11,10 @@ func Provider() terraform.ResourceProvider {
 			"buildkite_pipeline": dataSourcePipeline(),
 		},
 
+		ResourcesMap: map[string]*schema.Resource{
+			"buildkite_pipeline": resourcePipeline(),
+		},
+
 		Schema: map[string]*schema.Schema{
 			"api_token": &schema.Schema{
 				Type:        schema.TypeString,

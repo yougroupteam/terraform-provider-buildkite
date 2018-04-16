@@ -12,6 +12,10 @@ func dataSourcePipeline() *schema.Resource {
 		Read: dataSourcePipelineRead,
 
 		Schema: map[string]*schema.Schema{
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"organization": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -24,11 +28,7 @@ func dataSourcePipeline() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-			},
+
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
