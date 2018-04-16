@@ -1,6 +1,7 @@
 package buildkite
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/buildkite/go-buildkite/buildkite"
@@ -170,8 +171,9 @@ func resourcePipelineCreate(d *schema.ResourceData, meta interface{}) error {
 	input := buildPipelineInput(d)
 
 	pipe, _, err := client.Pipelines.Create(d.Get("organization").(string), input)
+
 	if err != nil {
-		return err
+		return fmt.Errorf("Error creating pipeline: %s", err)
 	}
 
 	updatePipelineFromAPI(d, pipe)
@@ -188,6 +190,13 @@ func resourcePipelineUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourcePipelineDelete(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*buildkite.Client)
+
+	_, err := client.Pipelines.Delete(d.Get("organization").(string), d.Get("slug").(string))
+	if err != nil {
+		return fmt.Errorf("Error deleting pipeline: %s", err)
+	}
+
 	return nil
 }
 
