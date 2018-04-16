@@ -3,7 +3,6 @@ package buildkite
 import (
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/buildkite/go-buildkite/buildkite"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -30,7 +29,7 @@ func resourcePipeline() *schema.Resource {
 				Required: true,
 			},
 			"step": &schema.Schema{
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -140,13 +139,10 @@ func resourcePipeline() *schema.Resource {
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
-				Optional: true,
 			},
 			"default_branch": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
-				// It feels like we should be able to set this, but the docs say otherwise
-				Optional: true,
 			},
 			"webhook_url": &schema.Schema{
 				Type:     schema.TypeString,
@@ -210,10 +206,8 @@ func buildPipelineInput(d *schema.ResourceData) *buildkite.CreatePipeline {
 		TeamUuids:                       []string{},
 	}
 
-	steps := d.Get("step").([]interface{})
+	steps := d.Get("step").(*schema.Set).List()
 	input.Steps = make([]buildkite.Step, len(steps))
-
-	aws.String("s")
 
 	for i, s := range steps {
 		step := s.(map[string]interface{})
