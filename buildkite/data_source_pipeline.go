@@ -2,6 +2,7 @@ package buildkite
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/buildkite/go-buildkite/buildkite"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -12,13 +13,25 @@ func dataSourcePipeline() *schema.Resource {
 		Read: dataSourcePipelineRead,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
 			"organization": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"provider_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"repository": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"url": &schema.Schema{
 				Type:     schema.TypeString,
@@ -27,12 +40,6 @@ func dataSourcePipeline() *schema.Resource {
 			"web_url": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
-			},
-
-			"slug": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
 			},
 			"builds_url": &schema.Schema{
 				Type:     schema.TypeString,
@@ -46,46 +53,33 @@ func dataSourcePipeline() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"repository": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 		},
 	}
 }
 
 func dataSourcePipelineRead(d *schema.ResourceData, meta interface{}) error {
-	conn := meta.(*buildkite.Client)
-	name := d.Get("name").(string)
-	var pipeline buildkite.Pipeline
+	client := meta.(*buildkite.Client)
 
-	// The API is paginated; loop through until we find what we're looking for
-	for i, done := 0, false; !done; i++ {
-		input := &buildkite.PipelineListOptions{
-			ListOptions: buildkite.ListOptions{
-				Page: i,
-			},
-		}
-		pipelines, _, err := conn.Pipelines.List(d.Get("organization").(string), input)
-		if err != nil {
-			return err
-		}
-
-		if len(pipelines) == 0 {
-			return fmt.Errorf("No pipeline %s found", name)
-		}
-
-		for _, p := range pipelines {
-			if *p.Name == name {
-				pipeline = p
-				done = true
-				break
-			}
-		}
+	p, _, err := client.Pipelines.Get(d.Get("organization").(string), d.Get("slug").(string))
+	if err != nil {
+		return fmt.Errorf("Error reading pipeline: %s", err)
 	}
 
-	d.SetId(*pipeline.ID)
-	d.Set("web_url", pipeline.WebURL)
+	d.SetId(StringValue(p.ID))
+
+	d.Set("badge_url", StringValue(p.BadgeURL))
+	d.Set("builds_url", StringValue(p.BuildsURL))
+	d.Set("created_at", p.CreatedAt.Format(time.RFC3339))
+	d.Set("name", StringValue(p.Name))
+	d.Set("provider_id", StringValue(p.Provider.ID))
+	d.Set("repository", StringValue(p.Repository))
+	d.Set("slug", StringValue(p.Slug))
+	d.Set("url", StringValue(p.URL))
+	d.Set("web_url", StringValue(p.WebURL))
+	d.Set("webhook_url", StringValue(p.Provider.WebhookURL))
+
+	steps := buildStepsFromAPI(p.Steps)
+	d.Set("steps", steps)
 
 	return nil
 }

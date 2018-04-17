@@ -88,10 +88,12 @@ func resourcePipeline() *schema.Resource {
 			"description": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"env": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
+				ForceNew: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -99,6 +101,7 @@ func resourcePipeline() *schema.Resource {
 			"provider_settings": &schema.Schema{
 				Type:     schema.TypeMap,
 				Optional: true,
+				ForceNew: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -106,26 +109,32 @@ func resourcePipeline() *schema.Resource {
 			"branch_configuration": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"skip_queued_branch_builds": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
+				ForceNew: true,
 			},
 			"skip_queued_branch_builds_filter": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"cancel_running_branch_builds": &schema.Schema{
 				Type:     schema.TypeBool,
 				Optional: true,
+				ForceNew: true,
 			},
 			"cancel_running_branch_builds_filter": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"team_uuids": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
+				ForceNew: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -243,6 +252,8 @@ func resourcePipelineUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	client.Pipelines.Update(d.Get("organization").(string), pipe)
 
+	updatePipelineFromAPI(d, pipe)
+
 	return resourcePipelineRead(d, meta)
 }
 
@@ -330,9 +341,16 @@ func updatePipelineFromAPI(d *schema.ResourceData, p *buildkite.Pipeline) {
 	d.Set("url", StringValue(p.URL))
 	d.Set("web_url", StringValue(p.WebURL))
 
-	steps := make([]interface{}, len(p.Steps))
-	for i, step := range p.Steps {
-		steps[i] = map[string]interface{}{
+	steps := buildStepsFromAPI(p.Steps)
+	d.Set("steps", steps)
+
+	return
+}
+
+func buildStepsFromAPI(steps []*buildkite.Step) []interface{} {
+	out := make([]interface{}, len(steps))
+	for i, step := range steps {
+		out[i] = map[string]interface{}{
 			"agent_query_rules":    step.AgentQueryRules,
 			"artifact_paths":       step.ArtifactPaths,
 			"branch_configuration": step.BranchConfiguration,
@@ -343,7 +361,6 @@ func updatePipelineFromAPI(d *schema.ResourceData, p *buildkite.Pipeline) {
 			"type":                 step.Type,
 		}
 	}
-	d.Set("steps", steps)
 
-	return
+	return out
 }

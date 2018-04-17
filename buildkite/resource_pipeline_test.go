@@ -16,7 +16,7 @@ func TestAccResourcePipelineCreate(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccResourcePipelineCreate(rStr),
+				Config: testAccResourcePipeline(rStr),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("buildkite_pipeline.test", "web_url"),
 					resource.TestCheckResourceAttr(
@@ -36,7 +36,7 @@ func TestAccResourcePipelineCreate(t *testing.T) {
 	return
 }
 
-func testAccResourcePipelineCreate(rStr string) string {
+func testAccResourcePipeline(rStr string) string {
 	return fmt.Sprintf(`
 resource buildkite_pipeline "test" {
   name         = "Acceptance test :terraform: %s"
