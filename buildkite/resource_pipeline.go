@@ -2,6 +2,7 @@ package buildkite
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/buildkite/go-buildkite/buildkite"
@@ -178,15 +179,71 @@ func resourcePipelineCreate(d *schema.ResourceData, meta interface{}) error {
 
 	updatePipelineFromAPI(d, pipe)
 
-	return nil
+	return resourcePipelineRead(d, meta)
 }
 
 func resourcePipelineRead(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*buildkite.Client)
+
+	pipe, resp, err := client.Pipelines.Get(d.Get("organization").(string), d.Get("slug").(string))
+	if err != nil {
+		// If pipeline not found, delete if from the state file
+		if resp.StatusCode == 404 {
+			log.Printf("[WARN] Pipeline (%s) not found, removing from state", d.Get("slug"))
+			d.SetId("")
+			return nil
+		}
+
+		return fmt.Errorf("Error reading pipeline: %s", err)
+	}
+
+	updatePipelineFromAPI(d, pipe)
+
 	return nil
 }
 
 func resourcePipelineUpdate(d *schema.ResourceData, meta interface{}) error {
-	return nil
+	client := meta.(*buildkite.Client)
+
+	pipe := &buildkite.Pipeline{
+		Name:       String(d.Get("name").(string)),
+		Repository: String(d.Get("repository").(string)),
+	}
+
+	steps := d.Get("step").(*schema.Set).List()
+	pipe.Steps = make([]*buildkite.Step, len(steps))
+
+	for i, s := range steps {
+		step := s.(map[string]interface{})
+		pipe.Steps[i] = &buildkite.Step{
+			Type:                String(step["type"].(string)),
+			Name:                String(step["name"].(string)),
+			Command:             String(step["command"].(string)),
+			ArtifactPaths:       String(step["artifact_paths"].(string)),
+			BranchConfiguration: String(step["branch_configuration"].(string)),
+			Env:                 map[string]string{},
+			TimeoutInMinutes:    step["timeout_in_minutes"].(int),
+			// Not yet supported by API client
+			// Concurrency:         step["concurrency"].(int),
+			// Parallelism:         step["parallelism"].(int),
+		}
+
+		for k, v := range step["env"].(map[string]interface{}) {
+			pipe.Steps[i].Env[k] = v.(string)
+		}
+
+		agentQueryRules := make([]string, len(step["agent_query_rules"].([]interface{})))
+
+		for j, v := range step["agent_query_rules"].([]interface{}) {
+			agentQueryRules[j] = v.(string)
+		}
+
+		pipe.Steps[i].AgentQueryRules = agentQueryRules
+	}
+
+	client.Pipelines.Update(d.Get("organization").(string), pipe)
+
+	return resourcePipelineRead(d, meta)
 }
 
 func resourcePipelineDelete(d *schema.ResourceData, meta interface{}) error {
