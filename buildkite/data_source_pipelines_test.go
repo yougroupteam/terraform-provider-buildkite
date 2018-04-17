@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDataSourcePipelineRead(t *testing.T) {
+func TestAccDataSourcePipeline(t *testing.T) {
 	rStr := acctest.RandString(6)
 
 	resource.Test(t, resource.TestCase{

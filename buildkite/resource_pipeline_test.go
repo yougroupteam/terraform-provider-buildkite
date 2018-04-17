@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccResourcePipelineCreate(t *testing.T) {
+func TestAccResourcePipeline(t *testing.T) {
 	rStr := acctest.RandString(6)
 
 	resource.Test(t, resource.TestCase{
