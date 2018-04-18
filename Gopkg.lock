@@ -78,6 +78,19 @@
   version = "v3.5.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/buildkite/go-buildkite"
+  packages = ["buildkite"]
+  revision = "d968c7b364442801b1a6bc2b43de09067f864a15"
+  source = "https://github.com/cozero/go-buildkite.git"
+
+[[projects]]
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -106,6 +119,12 @@
   ]
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
   version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   branch = "master"
@@ -219,12 +238,15 @@
     "config/module",
     "dag",
     "flatmap",
+    "helper/acctest",
     "helper/config",
     "helper/hashcode",
     "helper/hilmapstructure",
     "helper/logging",
     "helper/resource",
     "helper/schema",
+    "helper/structure",
+    "helper/validation",
     "httpclient",
     "moduledeps",
     "plugin",
@@ -362,12 +384,18 @@
     "bcrypt",
     "blowfish",
     "cast5",
+    "curve25519",
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "internal/chacha20",
     "openpgp",
     "openpgp/armor",
     "openpgp/elgamal",
     "openpgp/errors",
     "openpgp/packet",
-    "openpgp/s2k"
+    "openpgp/s2k",
+    "poly1305",
+    "ssh"
   ]
   revision = "d6449816ce06963d9d136eee5a56fca5b0616e7e"
 
@@ -455,6 +483,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ff0ad41b7c34ca296632d2c86399cce4de5f24aa822aae7b50bb4021cffc9ca1"
+  inputs-digest = "f6d111bbbc76ac749be76a37d5616c75a2cf15f7f0c619ac2dd22d4c20a961f3"
   solver-name = "gps-cdcl"
   solver-version = 1

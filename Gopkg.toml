@@ -26,6 +26,12 @@
 
 
 [[constraint]]
+  # use the cozero fork of go-buildkite client while we're developing this provider
+  name = "github.com/buildkite/go-buildkite"
+  branch = "master"
+  source = "https://github.com/cozero/go-buildkite.git"
+
+[[constraint]]
   name = "github.com/hashicorp/terraform"
   version = "0.11.7"
 

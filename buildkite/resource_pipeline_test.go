@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDataSourcePipeline(t *testing.T) {
+func TestAccResourcePipeline(t *testing.T) {
 	rStr := acctest.RandString(6)
 
 	resource.Test(t, resource.TestCase{
@@ -16,12 +16,18 @@ func TestAccDataSourcePipeline(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccDataSourcePipeline(rStr),
+				Config: testAccResourcePipeline(rStr),
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("buildkite_pipeline.test", "web_url"),
 					resource.TestCheckResourceAttr(
-						"data.buildkite_pipeline.test",
+						"buildkite_pipeline.test",
 						"name",
 						fmt.Sprintf("Acceptance test :terraform: %s", rStr),
+					),
+					resource.TestCheckResourceAttr(
+						"buildkite_pipeline.test",
+						"slug",
+						fmt.Sprintf("acceptance-test-terraform-%s", rStr),
 					),
 				),
 			},
@@ -30,7 +36,7 @@ func TestAccDataSourcePipeline(t *testing.T) {
 	return
 }
 
-func testAccDataSourcePipeline(rStr string) string {
+func testAccResourcePipeline(rStr string) string {
 	return fmt.Sprintf(`
 resource buildkite_pipeline "test" {
   name         = "Acceptance test :terraform: %s"
@@ -43,11 +49,6 @@ resource buildkite_pipeline "test" {
     name    = "Hi!"
     command = "echo \"Hello world\""
   }]
-}
-
-data buildkite_pipeline "test" {
-	organization = "cozero"
-	slug         = "${buildkite_pipeline.test.slug}"
 }
 `, rStr)
 }
