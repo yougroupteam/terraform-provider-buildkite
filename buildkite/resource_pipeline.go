@@ -30,8 +30,8 @@ func resourcePipeline() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"step": &schema.Schema{
-				Type:     schema.TypeSet,
+			"steps": &schema.Schema{
+				Type:     schema.TypeList,
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -188,7 +188,7 @@ func resourcePipelineCreate(d *schema.ResourceData, meta interface{}) error {
 
 	updatePipelineFromAPI(d, pipe)
 
-	return resourcePipelineRead(d, meta)
+	return nil
 }
 
 func resourcePipelineRead(d *schema.ResourceData, meta interface{}) error {
@@ -254,7 +254,7 @@ func resourcePipelineUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	updatePipelineFromAPI(d, pipe)
 
-	return resourcePipelineRead(d, meta)
+	return nil
 }
 
 func resourcePipelineDelete(d *schema.ResourceData, meta interface{}) error {
@@ -283,7 +283,7 @@ func buildPipelineInput(d *schema.ResourceData) *buildkite.CreatePipeline {
 		TeamUuids:                       []string{},
 	}
 
-	steps := d.Get("step").(*schema.Set).List()
+	steps := d.Get("steps").([]interface{})
 	input.Steps = make([]buildkite.Step, len(steps))
 
 	for i, s := range steps {

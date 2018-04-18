@@ -5,7 +5,7 @@ func String(v string) *string {
 	return &v
 }
 
-// StringValue returns the value of a string pointer or "" if the pointer is nil
+// StringValue deferences a pointer to a string or returns "" if the pointer is nil
 func StringValue(v *string) string {
 	if v != nil {
 		return *v

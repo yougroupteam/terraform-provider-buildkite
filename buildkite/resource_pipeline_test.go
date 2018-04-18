@@ -44,11 +44,11 @@ resource buildkite_pipeline "test" {
   description  = "Generated via acceptance tests - please delete if left dangling"
   repository   = "git@github.com:COzero/terraform-provider-buildkite.git"
 
-  step {
+  steps = [{
     type    = "script"
     name    = "Hi!"
     command = "echo \"Hello world\""
-  }
+  }]
 }
 `, rStr)
 }
