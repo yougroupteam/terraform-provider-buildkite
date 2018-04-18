@@ -17,11 +17,11 @@ resource "buildkite_pipeline" "example" {
   organization = "my-org"
   name         = "My great pipeline"
   repository   = "git@github.com:myorg/my-repo.git"
-  step {
+  steps = [{
     type    = "script"
     name    = "Hi!"
     command = "echo \"Hello world\""
-  }
+  }]
 }
 ```
 
@@ -30,7 +30,7 @@ resource "buildkite_pipeline" "example" {
  * `organization` - (Required) The name of the organization to which the pipeline is associated
  * `name` - (Required) The pipeline name
  * `repository` - (Required) The git repository associated with the pipeline
- * `step` - (Required) At least one step block as documented below
+ * `steps` - (Required) At list of step blocks as documented below
  * `description` - (Optional, Forces new resource) The pipeline description
  * `env` - (Optional, Forces new resource) A map of ENV key/value pairs that apply to the whole pipeline
  * `provider_settings` - (Optional, Forces new resource) A map of key/bool provider_settings. Provider specific and are not well documented.
