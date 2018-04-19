@@ -1,13 +1,13 @@
-Terraform Provider
-==================
+Terraform Provider for (Buildkite)[https://buildkite.com/]
+==========================================================
 
-[![Build Status](https://travis-ci.org/COzero/terraform-provider-bitbucket.svg?branch=master)](https://travis-ci.org/COzero/terraform-provider-bitbucket)
+[![Build Status](https://travis-ci.org/COzero/terraform-provider-buildkite.svg?branch=master)](https://travis-ci.org/COzero/terraform-provider-buildkite)
 
 - Website: https://www.terraform.io
 - [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
+<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="300px"> <img src="https://buildkite.com/site/assets/_nDESx9/images/brand-assets/buildkite-logo-on-light.svg" width="300px">
 
 Requirements
 ------------
